@@ -11,6 +11,6 @@ import com.example.demo.entities.Evenement;
 @Repository
 public interface EvenementRepository extends JpaRepository<Evenement, Long>{
 	List<Evenement>findByLieu(String lieu);
-	List<Evenement>findByDate(Date date);
+	List<Evenement>findByTitle(String title);
 
 }

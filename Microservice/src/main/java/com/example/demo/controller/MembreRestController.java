@@ -62,17 +62,17 @@ public class MembreRestController {
 		return memberservice.findMember(id);
 	}
 	 @CrossOrigin(origins = "http://localhost:4200")
-	@PostMapping(value = "/membres")
+	@PostMapping(value = "/membres/etd")
 	public Membre addMembre(@RequestBody Etudiant etd)
 	{
 		return memberservice.addMember(etd);
 	}
-	/* @CrossOrigin(origins = "http://localhost:4200")
-	@PostMapping(value = "/membres/enseignant")
+	 @CrossOrigin(origins = "http://localhost:4200")
+	@PostMapping(value = "/membres/ens")
 	public Membre addMembre(@RequestBody EnseignantChercheur ens)
 	{
 		return memberservice.addMember(ens);
-	}*/
+	}
 	 @CrossOrigin(origins = "http://localhost:4200")
 	@PutMapping(value="/membres/{id}")
 	public Membre updatemembre(@PathVariable Long id, @RequestBody Etudiant p)
@@ -155,7 +155,7 @@ public class MembreRestController {
 		return mbr;		
 	}
 	 @CrossOrigin(origins = "http://localhost:4200")
-	@PutMapping(value="/membres/affecterpub/{idetd}/{idevt}")
+	@PutMapping(value="/membres/affecterpub/{idetd}/{idpub}")
 	public Membre affecterPub(@PathVariable Long idetd , @PathVariable Long idpub )
 	{
 		
@@ -167,7 +167,7 @@ public class MembreRestController {
 			return mbr;	
 	}
 	 @CrossOrigin(origins = "http://localhost:4200")
-	@PutMapping(value="/membres/affecteroutil/{idetd}/{idevt}")
+	@PutMapping(value="/membres/affecteroutils/{idetd}/{idoutil}")
 	public Membre affecteroutil(@PathVariable Long idetd , @PathVariable Long idoutil )
 	{
 		
@@ -201,6 +201,7 @@ public class MembreRestController {
 	@DeleteMapping(value = "/membres/{id}")
 	public Membre deleteMember(@PathVariable Long id)
 	{
+		 
 		 Membre mbr=memberservice.findMember(id);
 		
 		mbr.setPubs(memberservice.findPublicationparauteur(id));
@@ -208,6 +209,127 @@ public class MembreRestController {
 		mbr.setOutils(memberservice.findoutilpardeveloppeur(id));
 		memberservice.deleteMember(id);
 		return mbr;
+	}
+	 @CrossOrigin(origins = "http://localhost:4200")
+		@DeleteMapping(value = "/membres/teacher/{id}")
+		public boolean deleteTeacher(@PathVariable Long id)
+		{
+		
+			
+			 Membre mbr=memberservice.findMember(id);
+			 List<Etudiant> alletd= memberservice.findAllEtudiants();
+			for(int i =0 ; i<alletd.size();i++) {
+				if(alletd.get(i).getEncadrant()==mbr) {
+					return true;
+				}
+			}
+			 
+			
+			 
+			memberservice.deleteMember(id);
+			return false;
+		}
+	 @CrossOrigin(origins = "http://localhost:4200")
+	 @DeleteMapping(value = "/membres/publication/delete/{idetd}/{idpub}")
+		public Membre deletepublicationofmember(@PathVariable Long idetd , @PathVariable Long idpub )
+		{
+		 
+		 memberservice.deletePublicationFromMember(idetd,idpub);
+		
+		 
+		 Membre mbr=memberservice.findMember(idetd);
+		
+		/* mbr.setPubs(memberservice.findPublicationparauteur(idetd));
+			mbr.setEvenements(memberservice.findevenementparorganisateur(idetd));
+			mbr.setOutils(memberservice.findoutilpardeveloppeur(idetd));*/
+		
+			return mbr;
+		}
+	 @CrossOrigin(origins = "http://localhost:4200")
+	 @PutMapping(value = "/membres/encadrant/delete/{idetd}")
+		public Membre deleteencadranttoetudiant(@PathVariable Long idetd  )
+		{
+		 
+		
+	
+		
+			return  memberservice.deleteEncadranttoetudiant(idetd);
+		}
+	 @CrossOrigin(origins = "http://localhost:4200")
+		@PutMapping(value="/membres/etudiant/delete/{idetd}")
+		public Membre deleteencadrant(@PathVariable Long idetd  )
+		{
+			
+		       return memberservice.deleteEncadranttoetudiant(idetd);
+		}
+	 
+	 @CrossOrigin(origins = "http://localhost:4200")
+		@GetMapping("/publicationsdiff/{id}")
+		public List<PublicationBean> listnotassignedpub(@PathVariable Long id )
+		{
+			return  memberservice.findDiffPub(id);
+			
+		}
+	 @CrossOrigin(origins = "http://localhost:4200")
+		@GetMapping("/eventdiff/{id}")
+		public List<EvenementBean> listnotassignedevt(@PathVariable Long id )
+		{
+			return  memberservice.finddiffevt(id);
+			
+		}
+	 @CrossOrigin(origins = "http://localhost:4200")
+		@GetMapping("/outildiff/{id}")
+		public List<OutilBean> listnotassignedoutil(@PathVariable Long id )
+		{
+			return  memberservice.finddiffoutil(id);
+			
+		}
+	 
+	 
+	 
+	 
+	 @CrossOrigin(origins = "http://localhost:4200")
+		@GetMapping("/membres/findbycin/{id}")
+		public Membre findByCin(@PathVariable String id )
+		{
+			return  memberservice.findByCin(id);
+			
+		}
+	 @CrossOrigin(origins = "http://localhost:4200")
+		@GetMapping("/membres/findbyemail/{id}")
+		public Membre findbyEmail(@PathVariable String id )
+		{
+			return  memberservice.findByEmail(id);
+			
+		}
+	 @CrossOrigin(origins = "http://localhost:4200")
+		@GetMapping("/membres/findbynom/{id}")
+		public List<Membre> findbyNom(@PathVariable String id )
+		{
+			return  memberservice.findByNom(id);
+			
+		}
+	 @CrossOrigin(origins = "http://localhost:4200")
+		@GetMapping("/membres/findbydiplome/{id}")
+		public List<Etudiant> findbydiplome(@PathVariable String id )
+		{
+			return  memberservice.findByDiplome(id);
+			
+		}
+	 @CrossOrigin(origins = "http://localhost:4200")
+		@GetMapping("/membres/findbygrade/{id}")
+		public List<EnseignantChercheur> findByGrade(@PathVariable String id )
+		{
+			return  memberservice.findByGrade(id);
+			
+		}
+
+@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping("/membres/findbyetablissement/{id}")
+	public List<EnseignantChercheur> findByEtablissement(@PathVariable String id )
+	{
+		return  memberservice.findByEtablissement(id);
+		
 	}
 	
 

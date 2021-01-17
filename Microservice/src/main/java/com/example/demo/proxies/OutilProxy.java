@@ -1,5 +1,7 @@
 package com.example.demo.proxies;
 
+import java.util.List;
+
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.hateoas.CollectionModel;
@@ -14,6 +16,8 @@ import com.example.demo.OutilBean;
 public interface OutilProxy {
 	@GetMapping(value = "/outils")
 	CollectionModel<OutilBean> listeDesoutils();
+	@GetMapping(value = "/outils")
+	List<OutilBean> listeDesoutil();
 
 	@GetMapping(value = "/outils/{id}")
 	EntityModel<OutilBean> recupererUneoutil(@PathVariable("id") Long id);

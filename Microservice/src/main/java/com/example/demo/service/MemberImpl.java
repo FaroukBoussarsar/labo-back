@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.EvenementBean;
@@ -27,6 +30,8 @@ import com.example.demo.entities.Membre_Publication;
 import com.example.demo.proxies.Evenementproxy;
 import com.example.demo.proxies.OutilProxy;
 import com.example.demo.proxies.PublicationProxy;
+
+import feign.Param;
 
 @Service
 public class MemberImpl implements IMemberService {
@@ -109,6 +114,17 @@ public class MemberImpl implements IMemberService {
 
 		return etudiantRepository.save(etd);
 	}
+	
+	
+	@Override
+	public Etudiant deleteEncadranttoetudiant(Long idetd) {
+		Etudiant etd= etudiantRepository.findById(idetd).get();
+		
+		
+		etd.setEncadrant(null);
+
+		return etudiantRepository.save(etd);
+	}
 
 
 	@Override
@@ -178,6 +194,90 @@ public class MemberImpl implements IMemberService {
 		});
 		return events ; 
 	}
+	@Override
+	public void deletePublicationFromMember( Long mbrid, Long pubid) {
+		//membrepubrepository.deletePublicationMember(mbrid, pubid);
+		Membre_Publication m=membrepubrepository.findspec(mbrid, pubid);
+		System.out.println("************************************");
+	System.out.println(m.getAuteur());
 	
+	System.out.println(m.getId());
+	
+	System.out.println("************************************");
+	}
+	
+	@Override
+	public List<PublicationBean> findDiffPub(Long idauteur) {
+		List<PublicationBean> pubsUser=new ArrayList<PublicationBean>();
+	
+		List< Membre_Publication> idpubs=membrepubrepository.findpubId(idauteur);
+		
+		idpubs.forEach(s->{
+			System.out.println(s);
+			pubsUser.add(proxy.recupererUnePublication(s.getId().getPublication_id()).getContent());
+			
+		}
+		);
+		List<PublicationBean> allPub=  proxy.listeDesPublication();
+		List<PublicationBean> differences = allPub;
+		differences.removeAll(pubsUser);
+		differences.forEach(s->{
+			System.out.println(s+"hello");
+		}
+				);
+		
+		return differences;
+	}
+	
+
+	@Override
+	public List<OutilBean> finddiffoutil(Long iddev) {
+		
+		List<OutilBean> outilsUser= new ArrayList<OutilBean>(); 
+		List<Membre_Outil> idoutils = membreoutrepository.findoutId(iddev);
+		idoutils.forEach(s->{
+			System.out.println(s);
+			outilsUser.add(oproxy.recupererUneoutil(s.getId().getOutil_id()).getContent());
+		});
+		
+		
+	
+		List<OutilBean> allPub=  oproxy.listeDesoutil();
+		List<OutilBean> differences = allPub;
+		differences.removeAll(outilsUser);
+		differences.forEach(s->{
+			System.out.println(s+"hello");
+		}
+				);
+		
+		return differences;
+	}
+
+	@Override
+	public List<EvenementBean> finddiffevt(Long iddev) {
+		List<EvenementBean> eventsUser = new ArrayList<EvenementBean>();
+		List<Membre_Evenement> idevents = membreevtrepository.findevtId(iddev);
+		idevents.forEach(s->{
+			System.out.println(s);
+			eventsUser.add(eproxy.recupererUneEvenement(s.getId().getEvenement_id()).getContent());
+		});
+		
+		
+		
+		
+		
+		
+	
+		List<EvenementBean> allPub=  eproxy.listeDesEvenement();
+		List<EvenementBean> differences = allPub;
+		differences.removeAll(eventsUser);
+		differences.forEach(s->{
+			System.out.println(s+"hello");
+		}
+				);
+		
+		return differences;
+	}
+
 
 }

@@ -40,8 +40,8 @@ public class EvenementService {
 	public List<Evenement> findByLieu(String lieu){
 		return evenementRepository.findByLieu(lieu) ; 
 	}
-	public List<Evenement> findByLieu(Date date){
-		return evenementRepository.findByDate(date) ; 
+	public List<Evenement> findByTitle(String date){
+		return evenementRepository.findByTitle(date) ; 
 	}
 	
 

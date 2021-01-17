@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,15 @@ public class EvenementController {
 		return evenementService.findEvenement(id);
 	}
 	 @CrossOrigin(origins = "http://localhost:4200")
-	@GetMapping("/evenements/lieu")
-	public List<Evenement> findEventLieu(@RequestParam String lieu){
-		return evenementService.findByLieu(lieu); 
+	 @GetMapping("/evenements/lieu/{id}")
+		public List<Evenement> findbylieu(@PathVariable String id ){
+		return evenementService.findByLieu(id); 
 	}
+	 @CrossOrigin(origins = "http://localhost:4200")
+	 @GetMapping("/evenements/title/{id}")
+		public List<Evenement> findbyTitle(@PathVariable String id ){
+			return evenementService.findByTitle(id); 
+		}
 	 @CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/evenements")
 	public Evenement addEvenement(@RequestBody Evenement evt) {

@@ -1,5 +1,7 @@
 package com.example.demo.proxies;
 
+import java.util.List;
+
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.hateoas.CollectionModel;
@@ -15,6 +17,9 @@ import com.example.demo.EvenementBean;
 public interface Evenementproxy {
 	@GetMapping(value = "/evenements")
 	CollectionModel<EvenementBean> listeDesEvenements();
+	
+	@GetMapping(value = "/evenements")
+	List<EvenementBean> listeDesEvenement();
 
 	@GetMapping(value = "/evenements/{id}")
 	EntityModel<EvenementBean> recupererUneEvenement(@PathVariable("id") Long id);

@@ -2,12 +2,16 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import org.springframework.hateoas.CollectionModel;
+
 import com.example.demo.EvenementBean;
 import com.example.demo.OutilBean;
 import com.example.demo.PublicationBean;
 import com.example.demo.entities.EnseignantChercheur;
 import com.example.demo.entities.Etudiant;
 import com.example.demo.entities.Membre;
+
+import feign.Param;
 
 public interface IMemberService {
 	// Crud sur les membres
@@ -51,5 +55,14 @@ public interface IMemberService {
 	public List<PublicationBean> findPublicationparauteur(Long idauteur);
 	public List<OutilBean> findoutilpardeveloppeur(Long iddev);
 	public List<EvenementBean> findevenementparorganisateur(Long idorg);
+	public void deletePublicationFromMember( Long mbrid, Long pubid);
+
+	public Etudiant deleteEncadranttoetudiant(Long idetd);
+
+	public List<PublicationBean> findDiffPub(Long idauteur);
+
+	public List<OutilBean> finddiffoutil(Long idauteur);
+
+	public List<EvenementBean> finddiffevt(Long iddev);
 
 }
